@@ -2,18 +2,19 @@ import osUtils from "os-utils";
 import os from "os";
 import fs from "fs";
 import { BrowserWindow } from "electron";
+import { ipcWebContentsSend } from "./util.js";
 
 const POLLINT_INTERVAL = 500;
 
 export function pollResources(mainWindow: BrowserWindow) {
 	setInterval(async () => {
-		const cpuUsage = await getCpuuUsage();
+		const cpuUsage = await getCpuUsage();
 		const ramUsage = getRamUsage();
 		const storageData = getStorageData();
-		mainWindow.webContents.send("statistics", {
+		ipcWebContentsSend("statistics", mainWindow.webContents, {
 			cpuUsage,
 			ramUsage,
-			storageData,
+			storageUsage: storageData.usage,
 		});
 	}, POLLINT_INTERVAL);
 }
@@ -30,7 +31,7 @@ export function getStaticData() {
 	};
 }
 
-function getCpuuUsage() {
+function getCpuUsage(): Promise<number> {
 	return new Promise((resolve) => {
 		osUtils.cpuUsage(resolve);
 	});

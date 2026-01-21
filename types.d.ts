@@ -1,13 +1,18 @@
 type Statistics = {
 	cpuUsage: number;
 	ramUsage: number;
-	storageData: number;
+	storageUsage: number;
 };
 
 type StaticData = {
 	totalStorage: number;
 	cpuModel: string;
 	totalMemoryGB: number;
+};
+
+type EventPayloadMapping = {
+	statistics: Statistics;
+	getStaticData: StaticData;
 };
 
 interface Window {
